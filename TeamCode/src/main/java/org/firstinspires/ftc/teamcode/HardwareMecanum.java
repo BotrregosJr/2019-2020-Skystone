@@ -134,7 +134,7 @@ public class HardwareMecanum
         outtake = hwMap.get(CRServo.class, "OT");
 
         outtake.setPower(0);
-        skystone.setPosition(.4);
+        skystone.setPosition(.5);
         foundation.setPosition(0);
     }
 }

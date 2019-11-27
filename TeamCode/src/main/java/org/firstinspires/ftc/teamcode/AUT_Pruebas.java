@@ -80,9 +80,9 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Autonomo Vuforia", group="Autonomo")
+@Autonomous(name="AUT_Pruebas", group="AUT")
 //@Disabled
-public class AutonomoVuforia extends LinearOpMode {
+public class AUT_Pruebas extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareMecanum         robot   = new HardwareMecanum();   // Use a Pushbot's hardware
@@ -332,10 +332,7 @@ public class AutonomoVuforia extends LinearOpMode {
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         encoderDrive(.3,  -4,  4, 4, -4, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(.3,  -2,  -2, -2, -2, 10.0);  // S1: Forward 47 Inches with 5 Sec timeout
-
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
+        encoderDrive(.3,  -1.3,  -1.3, -1.3, -1.25, 5);  // S1: Forward 47 Inches with 5 Sec timeout
 
 
         targetsSkyStone.activate();
@@ -358,7 +355,7 @@ public class AutonomoVuforia extends LinearOpMode {
                 }
             }
 
-            sleep(2000);
+            sleep(1000);
             // Provide feedback as to where the robot is located (if we know).
             if (targetVisible) {
                 // express position (translation) of robot in inches.
@@ -372,13 +369,21 @@ public class AutonomoVuforia extends LinearOpMode {
                 Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
                 telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
 
-                if (skystoney > -4 || skystoney < 0 ){
                     telemetry.addData("posicion", "1");
                     telemetry.update();
-                } else if (skystoney > 1 || skystoney < 10){
-                    telemetry.addData("posicionDOS", "2");
-                    telemetry.update();
-                }
+                    encoderDrive(.3,  1.7,  1.7, 1.7, 1.7, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+                    encoderDrive(.3,  -2.9,  2.9, 2.9, -2.9, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+                    robot.skystone.setPosition(0);
+                    encoderDrive(.3,  2.9,  -2.9, -2.9, 2.9, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+                    encoderDrive(.5,  -9,  -9, -9, -9, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+                    robot.skystone.setPosition(.4);
+                    encoderDrive(.5,  12.8,  12.9, 12.8, 12.8, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+                    encoderDrive(.3,  -3.4,  3.4, 3.4, -3.4, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+                    robot.skystone.setPosition(0);
+                    encoderDrive(.3,  6.4,  -6.4, -6.4, 6.4, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+                    encoderDrive(.5,  -14,  -14, -13.9, -13.9, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+                    robot.skystone.setPosition(.4);
+                    encoderDrive(.3,  4.3,  4.3, 4.3, 4.3, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
 
             }
             else {
