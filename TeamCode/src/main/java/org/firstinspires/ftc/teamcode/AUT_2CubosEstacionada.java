@@ -335,7 +335,12 @@ public class AUT_2CubosEstacionada extends LinearOpMode {
         encoderDrive(.3,  -1.3,  -1.3, -1.3, -1.25, 5);  // S1: Forward 47 Inches with 5 Sec timeout
 
 
+
         targetsSkyStone.activate();
+        telemetry.addData("Wait", "");
+        telemetry.update();
+        sleep(1000);
+
         while (!isStopRequested()) {
 
             // check all the trackable targets to see which one (if any) is visible.
@@ -355,14 +360,12 @@ public class AUT_2CubosEstacionada extends LinearOpMode {
                 }
             }
 
-            sleep(1000);
             // Provide feedback as to where the robot is located (if we know).
             if (targetVisible) {
                 // express position (translation) of robot in inches.
                 VectorF translation = lastLocation.getTranslation();
                 telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
                         translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
-
                 float skystoney = translation.get(1);
 
                 // express the rotation of the robot in degrees.
@@ -371,23 +374,14 @@ public class AUT_2CubosEstacionada extends LinearOpMode {
 
                     telemetry.addData("posicion", "1");
                     telemetry.update();
-                    encoderDrive(.3,  1.7,  1.7, 1.7, 1.7, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-                    encoderDrive(.3,  -2.9,  2.9, 2.9, -2.9, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-                    robot.skystone.setPosition(0);
-                    encoderDrive(.3,  2.9,  -2.9, -2.9, 2.9, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-                    encoderDrive(.5,  -9,  -9, -9, -9, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-                    robot.skystone.setPosition(.4);
-                    encoderDrive(.5,  12.8,  12.9, 12.8, 12.8, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-                    encoderDrive(.3,  -3.4,  3.4, 3.4, -3.4, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-                    robot.skystone.setPosition(0);
-                    encoderDrive(.3,  6.4,  -6.4, -6.4, 6.4, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-                    encoderDrive(.5,  -14,  -14, -13.9, -13.9, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-                    robot.skystone.setPosition(.4);
-                    encoderDrive(.3,  4.3,  4.3, 4.3, 4.3, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+                    sleep(2000);
+
+                    posicion1();
 
             }
             else {
                 telemetry.addData("Visible Target", "none");
+                encoderDrive(.3,  1.7,  1.7, 1.7, 1.7, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
             }
             telemetry.update();
         }
@@ -472,5 +466,22 @@ public class AUT_2CubosEstacionada extends LinearOpMode {
             robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             //  sleep(250);   // optional pause after each move
         }
+    }
+
+    public void posicion1 (){
+        encoderDrive(.3,  1.7,  1.7, 1.7, 1.7, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(.3,  -2.9,  2.9, 2.9, -2.9, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        robot.skystone.setPosition(0);
+        encoderDrive(.3,  2.9,  -2.9, -2.9, 2.9, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(.5,  -9,  -9, -9, -9, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        robot.skystone.setPosition(.4);
+        encoderDrive(.5,  13,  13, 12.9, 12.9, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(.3,  -3.4,  3.4, 3.4, -3.4, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        robot.skystone.setPosition(0);
+        encoderDrive(.3,  6.4,  -6.4, -6.4, 6.4, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(.5,  -14,  -14, -13.9, -13.9, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        robot.skystone.setPosition(.4);
+        encoderDrive(.3,  4.3,  4.3, 4.3, 4.3, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+
     }
 }

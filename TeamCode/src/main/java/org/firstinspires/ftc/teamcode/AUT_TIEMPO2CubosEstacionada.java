@@ -80,9 +80,9 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="AUT_Pruebas", group="AUT")
+@Autonomous(name="AUT_TIEMPO2CubosEstacionada", group="AUT")
 //@Disabled
-public class AUT_Pruebas extends LinearOpMode {
+public class AUT_TIEMPO2CubosEstacionada extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareMecanum         robot   = new HardwareMecanum();   // Use a Pushbot's hardware
@@ -331,13 +331,17 @@ public class AUT_Pruebas extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(.3,  -4,  4, 4, -4, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(.3,  -1.3,  -1.3, -1.3, -1.25, 5);  // S1: Forward 47 Inches with 5 Sec timeout
+        izquierda(.3,.3,.3,.3,1950);
+        atras(.3,.3,.3,.3,500);
 
 
         targetsSkyStone.activate();
+        telemetry.addData("Wait", "");
+        telemetry.update();
+        sleep(1000);
 
         while (!isStopRequested()) {
+
             // check all the trackable targets to see which one (if any) is visible.
             targetVisible = false;
             for (VuforiaTrackable trackable : allTrackables) {
@@ -357,37 +361,35 @@ public class AUT_Pruebas extends LinearOpMode {
 
             // Provide feedback as to where the robot is located (if we know).
             if (targetVisible) {
+                float skystoney = 1000;
                 // express position (translation) of robot in inches.
                 VectorF translation = lastLocation.getTranslation();
                 telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
                         translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
 
-                float skystoney = translation.get(1);
+                skystoney = translation.get(1);
 
                 // express the rotation of the robot in degrees.
                 Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
                 telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
 
-                    telemetry.addData("posicion", "1");
-                    telemetry.update();
+                    sleep(1000);
 
-                    encoderDrive(.3,  1.7,  1.7, 1.7, 1.7, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-                    encoderDrive(.3,  -2.9,  2.9, 2.9, -2.9, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+                    enfrente(.3,.3,.3,.3,580);
+                    izquierda(.3,.27,.3,.3,1100);
                     robot.skystone.setPosition(0);
-                    encoderDrive(.3,  2.9,  -2.9, -2.9, 2.9, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-                    encoderDrive(.5,  -9,  -9, -9, -9, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-                    robot.skystone.setPosition(.4);
-                    encoderDrive(.5,  12.8,  12.9, 12.8, 12.8, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-                    encoderDrive(.3,  -3.4,  3.4, 3.4, -3.4, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-                    robot.skystone.setPosition(0);
-                    encoderDrive(.3,  6.4,  -6.4, -6.4, 6.4, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-                    encoderDrive(.5,  -14,  -14, -13.9, -13.9, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-                    robot.skystone.setPosition(.4);
-                    encoderDrive(.3,  4.3,  4.3, 4.3, 4.3, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+                    derecha(.3,.3,.3,.3,1500);
+                    atras(.4,.4,.4,.4,4000);
+
 
             }
             else {
                 telemetry.addData("Visible Target", "none");
+                targetsSkyStone.deactivate();
+                enfrente(.3,.3,.3,.3,450);
+                sleep(500);
+                targetsSkyStone.activate();
+                sleep(500);
             }
             telemetry.update();
         }
@@ -404,73 +406,70 @@ public class AUT_Pruebas extends LinearOpMode {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
-    public void encoderDrive(double speed,
-                             double frontleft, double frontright,
-                             double backleft, double backright,
-                             double timeoutS) {
-        int newFrontLeftTarget;
-        int newFrontRightTarget;
-        int newBackLeftTarget;
-        int newBackRightTarget;
 
-        // Ensure that the opmode is still active
-        if (opModeIsActive()) {
 
-            // Determine new target position, and pass to motor controller
-            newFrontLeftTarget = robot.frontLeft.getCurrentPosition() + (int)(frontleft * COUNTS_PER_INCH);
-            newFrontRightTarget = robot.frontRight.getCurrentPosition() + (int)(frontright * COUNTS_PER_INCH);
-            newBackLeftTarget = robot.backLeft.getCurrentPosition() + (int)(backleft * COUNTS_PER_INCH);
-            newBackRightTarget = robot.backRight.getCurrentPosition() + (int)(backright * COUNTS_PER_INCH);
+    public void posicion1 (){
+        telemetry.addData("posicionUNO", "1");
+        telemetry.update();
 
-            robot.frontLeft.setTargetPosition(newFrontLeftTarget);
-            robot.frontRight.setTargetPosition(newFrontRightTarget);
-            robot.backLeft.setTargetPosition(newBackLeftTarget);
-            robot.backRight.setTargetPosition(newBackRightTarget);
+    }
+    public void posicion2 (){
+        telemetry.addData("posicionDOS", "2");
+        telemetry.update();
 
-            // Turn On RUN_TO_POSITION
-            robot.frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+    public void posicion3 (){
+        telemetry.addData("posicionTRES", "3");
+        telemetry.update();
 
-            // reset the timeout time and start motion.
-            runtime.reset();
-            robot.frontLeft.setPower(Math.abs(speed));
-            robot.frontRight.setPower(Math.abs(speed));
-            robot.backLeft.setPower(Math.abs(speed));
-            robot.backRight.setPower(Math.abs(speed));
+    }
 
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-            // its target position, the motion will stop.  This is "safer" in the event that the robot will
-            // always end the motion as soon as possible.
-            // However, if you require that BOTH motors have finished their moves before the robot continues
-            // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while (opModeIsActive() &&
-                   (runtime.seconds() < timeoutS) &&
-                   (robot.frontRight.isBusy() && robot.frontLeft.isBusy() && robot.backRight.isBusy() && robot.backLeft.isBusy() )) {
-
-                // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d : %7d :%7d", newFrontLeftTarget,  newFrontRightTarget, newBackLeftTarget, newBackRightTarget);
-                telemetry.addData("Path2",  "Running at %7d :%7d : %7d :%7d",
-                                            robot.frontLeft.getCurrentPosition(),
-                                            robot.frontRight.getCurrentPosition(), robot.backLeft.getCurrentPosition(),
-                        robot.backRight.getCurrentPosition());
-                telemetry.update();
-            }
-
-            // Stop all motion;
-            robot.frontRight.setPower(0);
-            robot.frontLeft.setPower(0);
-            robot.backLeft.setPower(0);
-            robot.backRight.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            //  sleep(250);   // optional pause after each move
-        }
+    public void enfrente (double frontRightPower, double backRightPower, double frontLeftPower, double backLeftPower, long tiempo){
+        robot.frontRight.setPower(frontRightPower);
+        robot.backRight.setPower(backRightPower);
+        robot.frontLeft.setPower(frontLeftPower);
+        robot.backLeft.setPower(backLeftPower);
+        sleep(tiempo);
+        robot.frontRight.setPower(0);
+        robot.backRight.setPower(0);
+        robot.frontLeft.setPower(0);
+        robot.backLeft.setPower(0);
+        sleep(500);
+    }
+    public void atras (double frontRightPower, double backRightPower, double frontLeftPower, double backLeftPower, long tiempo){
+        robot.frontRight.setPower(-frontRightPower);
+        robot.backRight.setPower(-backRightPower);
+        robot.frontLeft.setPower(-frontLeftPower);
+        robot.backLeft.setPower(-backLeftPower);
+        sleep(tiempo);
+        robot.frontRight.setPower(0);
+        robot.backRight.setPower(0);
+        robot.frontLeft.setPower(0);
+        robot.backLeft.setPower(0);
+        sleep(500);
+    }
+    public void izquierda (double frontRightPower, double backRightPower, double frontLeftPower, double backLeftPower, long tiempo){
+        robot.frontRight.setPower(frontRightPower);
+        robot.backRight.setPower(-backRightPower);
+        robot.frontLeft.setPower(-frontLeftPower);
+        robot.backLeft.setPower(backLeftPower);
+        sleep(tiempo);
+        robot.frontRight.setPower(0);
+        robot.backRight.setPower(0);
+        robot.frontLeft.setPower(0);
+        robot.backLeft.setPower(0);
+        sleep(500);
+    }
+    public void derecha (double frontRightPower, double backRightPower, double frontLeftPower, double backLeftPower, long tiempo){
+        robot.frontRight.setPower(-frontRightPower);
+        robot.backRight.setPower(backRightPower);
+        robot.frontLeft.setPower(frontLeftPower);
+        robot.backLeft.setPower(-backLeftPower);
+        sleep(tiempo);
+        robot.frontRight.setPower(0);
+        robot.backRight.setPower(0);
+        robot.frontLeft.setPower(0);
+        robot.backLeft.setPower(0);
+        sleep(500);
     }
 }
