@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -89,9 +90,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 
 
 @Autonomous(name="ULTRA BIG CHALE", group ="Concept")
-
-
-//@Disabled
+@Disabled
 public class TestBerdeja extends LinearOpMode {
     HardwareMecanum hws       = new HardwareMecanum(); // use the class created to define a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();

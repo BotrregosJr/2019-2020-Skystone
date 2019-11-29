@@ -80,9 +80,9 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="AUT_2CubosEstacionada", group="AUT")
+@Autonomous(name="AZUL_2CubosEstacionadaTIEMPO", group="AUT")
 //@Disabled
-public class AUT_2CubosEstacionada extends LinearOpMode {
+public class AZUL_2CubosEstacionadaTIEMPO extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareMecanum         robot   = new HardwareMecanum();   // Use a Pushbot's hardware
@@ -137,15 +137,6 @@ public class AUT_2CubosEstacionada extends LinearOpMode {
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 
-        robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d :%7d :%7d",
@@ -331,9 +322,8 @@ public class AUT_2CubosEstacionada extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(.3,  -4,  4, 4, -4, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(.3,  -1.3,  -1.3, -1.3, -1.25, 5);  // S1: Forward 47 Inches with 5 Sec timeout
-
+        izquierda(.5,.5,.5,.5,2000);
+        atras(.3,.3,.3,.3,500);
 
 
         targetsSkyStone.activate();
@@ -362,26 +352,35 @@ public class AUT_2CubosEstacionada extends LinearOpMode {
 
             // Provide feedback as to where the robot is located (if we know).
             if (targetVisible) {
+                float skystoney = 1000;
                 // express position (translation) of robot in inches.
                 VectorF translation = lastLocation.getTranslation();
                 telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
                         translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
-                float skystoney = translation.get(1);
+
+                skystoney = translation.get(1);
 
                 // express the rotation of the robot in degrees.
                 Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
                 telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
 
-                    telemetry.addData("posicion", "1");
-                    telemetry.update();
-                    sleep(2000);
+                    sleep(1000);
 
-                    posicion1();
+                    if (robot.conteo == 1){
+                        posicion1();
+                    } else if (robot.conteo == 2){
+                        posicion2();
+                    } else if (robot.conteo == 3 ){
+                        posicion3();
+                    }
 
             }
             else {
                 telemetry.addData("Visible Target", "none");
-                encoderDrive(.3,  1.7,  1.7, 1.7, 1.7, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+                robot.conteo = robot.conteo + 1;
+                telemetry.addData("Conteo", "%d", robot.conteo);
+                enfrente(.3,.3,.3,.3,450);
+                sleep(1000);
             }
             telemetry.update();
         }
@@ -398,90 +397,101 @@ public class AUT_2CubosEstacionada extends LinearOpMode {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
-    public void encoderDrive(double speed,
-                             double frontleft, double frontright,
-                             double backleft, double backright,
-                             double timeoutS) {
-        int newFrontLeftTarget;
-        int newFrontRightTarget;
-        int newBackLeftTarget;
-        int newBackRightTarget;
 
-        // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-
-            // Determine new target position, and pass to motor controller
-            newFrontLeftTarget = robot.frontLeft.getCurrentPosition() + (int)(frontleft * COUNTS_PER_INCH);
-            newFrontRightTarget = robot.frontRight.getCurrentPosition() + (int)(frontright * COUNTS_PER_INCH);
-            newBackLeftTarget = robot.backLeft.getCurrentPosition() + (int)(backleft * COUNTS_PER_INCH);
-            newBackRightTarget = robot.backRight.getCurrentPosition() + (int)(backright * COUNTS_PER_INCH);
-
-            robot.frontLeft.setTargetPosition(newFrontLeftTarget);
-            robot.frontRight.setTargetPosition(newFrontRightTarget);
-            robot.backLeft.setTargetPosition(newBackLeftTarget);
-            robot.backRight.setTargetPosition(newBackRightTarget);
-
-            // Turn On RUN_TO_POSITION
-            robot.frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            // reset the timeout time and start motion.
-            runtime.reset();
-            robot.frontLeft.setPower(Math.abs(speed));
-            robot.frontRight.setPower(Math.abs(speed));
-            robot.backLeft.setPower(Math.abs(speed));
-            robot.backRight.setPower(Math.abs(speed));
-
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-            // its target position, the motion will stop.  This is "safer" in the event that the robot will
-            // always end the motion as soon as possible.
-            // However, if you require that BOTH motors have finished their moves before the robot continues
-            // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while (opModeIsActive() &&
-                   (runtime.seconds() < timeoutS) &&
-                   (robot.frontRight.isBusy() && robot.frontLeft.isBusy() && robot.backRight.isBusy() && robot.backLeft.isBusy() )) {
-
-                // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d : %7d :%7d", newFrontLeftTarget,  newFrontRightTarget, newBackLeftTarget, newBackRightTarget);
-                telemetry.addData("Path2",  "Running at %7d :%7d : %7d :%7d",
-                                            robot.frontLeft.getCurrentPosition(),
-                                            robot.frontRight.getCurrentPosition(), robot.backLeft.getCurrentPosition(),
-                        robot.backRight.getCurrentPosition());
-                telemetry.update();
-            }
-
-            // Stop all motion;
-            robot.frontRight.setPower(0);
-            robot.frontLeft.setPower(0);
-            robot.backLeft.setPower(0);
-            robot.backRight.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            //  sleep(250);   // optional pause after each move
-        }
-    }
 
     public void posicion1 (){
-        encoderDrive(.3,  1.7,  1.7, 1.7, 1.7, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(.3,  -2.9,  2.9, 2.9, -2.9, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        robot.skystone.setPosition(0);
-        encoderDrive(.3,  2.9,  -2.9, -2.9, 2.9, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(.5,  -9,  -9, -9, -9, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        robot.skystone.setPosition(.4);
-        encoderDrive(.5,  13,  13, 12.9, 12.9, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(.3,  -3.4,  3.4, 3.4, -3.4, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        robot.skystone.setPosition(0);
-        encoderDrive(.3,  6.4,  -6.4, -6.4, 6.4, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(.5,  -14,  -14, -13.9, -13.9, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        robot.skystone.setPosition(.4);
-        encoderDrive(.3,  4.3,  4.3, 4.3, 4.3, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        telemetry.addData("posicionUNO", "1");
+        telemetry.update();
 
+        enfrente(.3,.3,.3,.3,520);
+        izquierda(.5,.5,.5,.5,1600);
+        robot.skystone.setPosition(0);
+        sleep(500);
+        derecha(.5,.5,.5,.5,1500);
+        atras(.4,.4,.4,.4,1400);
+        robot.skystone.setPosition(.4);
+        sleep(500);
+        enfrente(.3,.3,.3,.3,500);
+        enfrente(0,0,0,0,10000);
+        robot.conteo = 0;
+    }
+    public void posicion2 (){
+        telemetry.addData("posicionDOS", "2");
+        telemetry.update();
+
+        enfrente(.3,.3,.3,.3,520);
+        izquierda(.5,.5,.5,.5,1600);
+        robot.skystone.setPosition(0);
+        sleep(500);
+        derecha(.5,.5,.5,.5,1500);
+        atras(.4,.4,.4,.4,1800);
+        robot.skystone.setPosition(.4);
+        sleep(500);
+        enfrente(.3,.3,.3,.3,500);
+        enfrente(0,0,0,0,10000);
+        robot.conteo = 0;
+
+    }
+    public void posicion3 (){
+        enfrente(.3,.3,.3,.3,420);
+        izquierda(.5,.5,.5,.5,1600);
+        robot.skystone.setPosition(0);
+        sleep(500);
+        derecha(.5,.5,.5,.5,1500);
+        atras(.4,.4,.4,.4,2000);
+        robot.skystone.setPosition(.4);
+        sleep(500);
+        enfrente(.3,.3,.3,.3,500);
+        enfrente(0,0,0,0,10000);
+        robot.conteo = 0;
+    }
+
+    public void enfrente (double frontRightPower, double backRightPower, double frontLeftPower, double backLeftPower, long tiempo){
+        robot.frontRight.setPower(frontRightPower);
+        robot.backRight.setPower(backRightPower);
+        robot.frontLeft.setPower(frontLeftPower);
+        robot.backLeft.setPower(backLeftPower);
+        sleep(tiempo);
+        robot.frontRight.setPower(0);
+        robot.backRight.setPower(0);
+        robot.frontLeft.setPower(0);
+        robot.backLeft.setPower(0);
+        sleep(500);
+    }
+    public void atras (double frontRightPower, double backRightPower, double frontLeftPower, double backLeftPower, long tiempo){
+        robot.frontRight.setPower(-frontRightPower);
+        robot.backRight.setPower(-backRightPower);
+        robot.frontLeft.setPower(-frontLeftPower);
+        robot.backLeft.setPower(-backLeftPower);
+        sleep(tiempo);
+        robot.frontRight.setPower(0);
+        robot.backRight.setPower(0);
+        robot.frontLeft.setPower(0);
+        robot.backLeft.setPower(0);
+        sleep(500);
+    }
+    public void izquierda (double frontRightPower, double backRightPower, double frontLeftPower, double backLeftPower, long tiempo){
+        robot.frontRight.setPower(frontRightPower);
+        robot.backRight.setPower(-backRightPower);
+        robot.frontLeft.setPower(-frontLeftPower);
+        robot.backLeft.setPower(backLeftPower);
+        sleep(tiempo);
+        robot.frontRight.setPower(0);
+        robot.backRight.setPower(0);
+        robot.frontLeft.setPower(0);
+        robot.backLeft.setPower(0);
+        sleep(500);
+    }
+    public void derecha (double frontRightPower, double backRightPower, double frontLeftPower, double backLeftPower, long tiempo){
+        robot.frontRight.setPower(-frontRightPower);
+        robot.backRight.setPower(backRightPower);
+        robot.frontLeft.setPower(frontLeftPower);
+        robot.backLeft.setPower(-backLeftPower);
+        sleep(tiempo);
+        robot.frontRight.setPower(0);
+        robot.backRight.setPower(0);
+        robot.frontLeft.setPower(0);
+        robot.backLeft.setPower(0);
+        sleep(500);
     }
 }

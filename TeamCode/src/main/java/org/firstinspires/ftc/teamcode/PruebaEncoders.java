@@ -65,7 +65,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  */
 
 @Autonomous(name="Prueba Encoders", group="Pushbot")
-//@Disabled
+@Disabled
 public class PruebaEncoders extends LinearOpMode {
 
     /* Declare OpMode members. */
