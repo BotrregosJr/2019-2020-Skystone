@@ -429,6 +429,7 @@ public class AZUL_2CubosEstacionadaTIEMPO extends LinearOpMode {
         sleep(500);
         enfrente(.3,.3,.3,.3,500);
         enfrente(0,0,0,0,10000);
+
         robot.conteo = 0;
 
     }
