@@ -69,6 +69,7 @@ public class HardwareMecanum
     public CRServo outtake    = null;
     public Servo    skystone    = null;
     public Servo  foundation    = null;
+    public Servo capstone = null;
 
     public double frontRightPower;
     public double backRightPower;
@@ -132,6 +133,8 @@ public class HardwareMecanum
         foundation  = hwMap.get(Servo.class, "FD");
         skystone = hwMap.get(Servo.class, "SS");
         outtake = hwMap.get(CRServo.class, "OT");
+        capstone = hwMap.get(Servo.class, "CP");
+
 
         outtake.setPower(0);
         skystone.setPosition(.5);

@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.HardwareMecanum;
 
@@ -159,6 +160,23 @@ public class TeleopMecanum extends OpMode{
             } else{
                 hws.slider.setPower(0);
             }
+
+
+            if (gamepad2.left_bumper){
+                hws.outtake.setPower(1);
+            } else if (gamepad2.x){
+                hws.outtake.setPower(-1);
+            }else{
+                hws.outtake.setPower(0);
+            }
+
+        if (gamepad2.left_bumper){
+            hws.capstone.setPosition(1);
+        } else if (gamepad2.x){
+            hws.capstone.setPosition(0);
+        }else{
+            hws.capstone.setPosition(0);
+        }
 
 
             telemetry.addData("Turboooooooo prro", turbo);
