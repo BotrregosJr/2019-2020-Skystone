@@ -31,7 +31,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -80,9 +79,9 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="AZUL_2CubosEstacionadaTIEMPO", group="AUT")
+@Autonomous(name="ROJO_2CubosEstacionadaTIEMPO", group="AUT")
 //@Disabled
-public class AZUL_2CubosEstacionadaTIEMPO extends LinearOpMode {
+public class ROJO_2CubosEstacionadaTIEMPO extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareMecanum         robot   = new HardwareMecanum();   // Use a Pushbot's hardware
@@ -323,7 +322,7 @@ public class AZUL_2CubosEstacionadaTIEMPO extends LinearOpMode {
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         izquierda(.5,.5,.5,.5,1600);
-        atras(.3,.3,.3,.3,500);
+        enfrente(.3,.3,.3,.3,500);
 
 
         targetsSkyStone.activate();
@@ -379,7 +378,7 @@ public class AZUL_2CubosEstacionadaTIEMPO extends LinearOpMode {
                 telemetry.addData("Visible Target", "none");
                 robot.conteo = robot.conteo + 1;
                 telemetry.addData("Conteo", "%d", robot.conteo);
-                enfrente(.3,.3,.3,.3,450);
+                atras(.3,.3,.3,.3,450);
                 sleep(1000);
             }
             telemetry.update();
@@ -403,23 +402,23 @@ public class AZUL_2CubosEstacionadaTIEMPO extends LinearOpMode {
         telemetry.addData("posicionUNO", "1");
         telemetry.update();
 
-        enfrente(.3,.3,.3,.3,520);
+        atras(.3,.3,.3,.3,520);
         izquierda(.5,.5,.5,.5,1600);
         robot.skystone.setPosition(0);
         sleep(500);
         derecha(.5,.5,.5,.5,1500);
-        atras(.4,.4,.4,.4,1400);
+        enfrente(.4,.4,.4,.4,1400);
         robot.skystone.setPosition(.4);
         sleep(500);
-        enfrente(.4,.4,.4,.4,1500);
+        atras(.4,.4,.4,.4,1500);
         izquierda(.5,.5,.5,.5,1600);
         robot.skystone.setPosition(0);
         sleep(500);
         derecha(.5,.5,.5,.5,1500);
-        atras(.4,.4,.4,.4,1400);
+        enfrente(.4,.4,.4,.4,1400);
         robot.skystone.setPosition(.4);
         sleep(500);
-        enfrente(.3,.3,.3,.3,500);
+        atras(.3,.3,.3,.3,500);
 
         enfrente(0,0,0,0,10000);
         robot.conteo = 0;
@@ -428,17 +427,26 @@ public class AZUL_2CubosEstacionadaTIEMPO extends LinearOpMode {
         telemetry.addData("posicionDOS", "2");
         telemetry.update();
 
-        enfrente(.3,.3,.3,.3,520);
-        izquierda(.5,.5,.5,.5,500);
+        atras(.3,.3,.3,.3,520);
+        izquierda(.5,.5,.5,.5,1600);
         robot.skystone.setPosition(0);
         sleep(500);
         derecha(.5,.5,.5,.5,1500);
-        atras(.4,.4,.4,.4,1800);
+        enfrente(.4,.4,.4,.4,1800);
         robot.skystone.setPosition(.4);
         sleep(500);
-        enfrente(.3,.3,.3,.3,500);
-        enfrente(0,0,0,0,10000);
+        atras(.4,.4,.4,.4,1500);
+        izquierda(.5,.5,.5,.5,1600);
+        robot.skystone.setPosition(0);
+        sleep(500);
+        derecha(.5,.5,.5,.5,1500);
+        enfrente(.4,.4,.4,.4,1400);
+        robot.skystone.setPosition(.4);
+        sleep(500);
+        atras(.3,.3,.3,.3,500);
 
+
+        enfrente(0,0,0,0,10000);
         robot.conteo = 0;
 
     }
@@ -451,7 +459,16 @@ public class AZUL_2CubosEstacionadaTIEMPO extends LinearOpMode {
         atras(.4,.4,.4,.4,2000);
         robot.skystone.setPosition(.4);
         sleep(500);
-        enfrente(.3,.3,.3,.3,500);
+        atras(.4,.4,.4,.4,1500);
+        izquierda(.5,.5,.5,.5,1600);
+        robot.skystone.setPosition(0);
+        sleep(500);
+        derecha(.5,.5,.5,.5,1500);
+        enfrente(.4,.4,.4,.4,1400);
+        robot.skystone.setPosition(.4);
+        sleep(500);
+        atras(.3,.3,.3,.3,500);
+
         enfrente(0,0,0,0,10000);
         robot.conteo = 0;
     }

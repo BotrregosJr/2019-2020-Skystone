@@ -144,7 +144,7 @@ public class TeleopMecanum extends OpMode{
             } else if(gamepad2.a){
                 hws. transicion. setPower(-1);
             } else if(gamepad2.y){
-                hws. transicion. setPower(.75);
+                //hws. transicion. setPower(.75);
             } else if(gamepad2.b){
                 hws. transicion. setPower(.5);
             }else{
@@ -163,19 +163,17 @@ public class TeleopMecanum extends OpMode{
 
 
             if (gamepad2.left_bumper){
-                hws.outtake.setPower(1);
-            } else if (gamepad2.x){
                 hws.outtake.setPower(-1);
+
             }else{
                 hws.outtake.setPower(0);
             }
 
-        if (gamepad2.left_bumper){
+        if (gamepad2.y){
+            hws.capstone.setPosition(0);
+        } else if (gamepad2.dpad_left){
             hws.capstone.setPosition(1);
-        } else if (gamepad2.x){
-            hws.capstone.setPosition(0);
-        }else{
-            hws.capstone.setPosition(0);
+
         }
 
 
