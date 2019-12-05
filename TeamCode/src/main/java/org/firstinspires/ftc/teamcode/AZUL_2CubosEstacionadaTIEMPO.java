@@ -139,12 +139,7 @@ public class AZUL_2CubosEstacionadaTIEMPO extends LinearOpMode {
 
 
         // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0",  "Starting at %7d :%7d :%7d :%7d",
-                          robot.frontLeft.getCurrentPosition(),
-                          robot.frontRight.getCurrentPosition(),
-                robot.backLeft.getCurrentPosition(),
-                robot.backRight.getCurrentPosition());
-        telemetry.update();
+
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          * We can pass Vuforia the handle to a camera preview resource (on the RC phone);
@@ -322,8 +317,8 @@ public class AZUL_2CubosEstacionadaTIEMPO extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        izquierda(.5,.5,.5,.5,1600);
-        atras(.3,.3,.3,.3,500);
+        izquierda(.7,.7,.7,.7,1100);
+        atras(.3,.3,.3,.3,600);
 
 
         targetsSkyStone.activate();
@@ -403,20 +398,20 @@ public class AZUL_2CubosEstacionadaTIEMPO extends LinearOpMode {
         telemetry.addData("posicionUNO", "1");
         telemetry.update();
 
-        enfrente(.3,.3,.3,.3,520);
-        izquierda(.5,.5,.5,.5,1600);
+        enfrente(.3,.3,.3,.3,520);//
+        izquierda(.7,.7,.7,.7,800);
         robot.skystone.setPosition(0);
         sleep(500);
-        derecha(.5,.5,.5,.5,1500);
+        derecha(.7,.7,.7,.7,1500);
         atras(.4,.4,.4,.4,1400);
         robot.skystone.setPosition(.4);
         sleep(500);
         enfrente(.4,.4,.4,.4,1500);
-        izquierda(.5,.5,.5,.5,1600);
+        izquierda(.7,.7,.7,.7,1800);
         robot.skystone.setPosition(0);
         sleep(500);
-        derecha(.5,.5,.5,.5,1500);
-        atras(.4,.4,.4,.4,1400);
+        derecha(.7,.7,.7,.7,1600);
+        atras(.5,.5,.5,.5,1800);
         robot.skystone.setPosition(.4);
         sleep(500);
         enfrente(.3,.3,.3,.3,500);
@@ -428,11 +423,11 @@ public class AZUL_2CubosEstacionadaTIEMPO extends LinearOpMode {
         telemetry.addData("posicionDOS", "2");
         telemetry.update();
 
-        enfrente(.3,.3,.3,.3,520);
-        izquierda(.5,.5,.5,.5,500);
+        enfrente(.3,.3,.3,.3,450);
+        izquierda(.7,.7,.7,.7,800);
         robot.skystone.setPosition(0);
         sleep(500);
-        derecha(.5,.5,.5,.5,1500);
+        derecha(.7,.7,.7,.7,2000);
         atras(.4,.4,.4,.4,1800);
         robot.skystone.setPosition(.4);
         sleep(500);
@@ -444,7 +439,7 @@ public class AZUL_2CubosEstacionadaTIEMPO extends LinearOpMode {
     }
     public void posicion3 (){
         enfrente(.3,.3,.3,.3,420);
-        izquierda(.5,.5,.5,.5,1600);
+        izquierda(.5,.5,.5,.5,1700);
         robot.skystone.setPosition(0);
         sleep(500);
         derecha(.5,.5,.5,.5,1500);
