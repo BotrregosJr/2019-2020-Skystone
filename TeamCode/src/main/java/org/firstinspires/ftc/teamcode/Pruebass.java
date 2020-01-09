@@ -29,82 +29,88 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.HardwareMecanum;
-
+import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
- * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
- * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
- * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
+ * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
+ * All device access is managed through the HardwarePushbot class.
+ * The code is structured as a LinearOpMode
  *
- * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
- * It includes all the skeletal structure that all linear OpModes contain.
+ * This particular OpMode executes a POV Game style Teleop for a PushBot
+ * In this mode the left stick moves the robot FWD and back, the Right stick turns left and right.
+ * It raises and lowers the claw using the Gampad Y and A buttons respectively.
+ * It also opens and closes the claws slowly using the left and right Bumper buttons.
  *
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Testing", group="Linear Opmode")
-public class TestTeleop extends LinearOpMode {
+@TeleOp(name="Pruebass", group="Pushbot")
+public class Pruebass extends LinearOpMode {
 
-    // Declare OpMode members.
-    private ElapsedTime runtime = new ElapsedTime();
-    HardwareMecanum hws       = new HardwareMecanum(); // use the class created to define a Pushbot's hardware
-
+    /* Declare OpMode members. */
+    HardwareMecanum robot           = new HardwareMecanum();   // Use a Pushbot's hardware
 
     @Override
     public void runOpMode() {
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-        hws.init(hardwareMap);
+        double left;
+        double right;
+        double drive;
+        double turn;
+        double max;
 
+        /* Initialize the hardware variables.
+         * The init() method of the hardware class does all the work here
+         */
+        robot.init(hardwareMap);
+
+        // Send telemetry message to signify robot waiting;
+        telemetry.addData("Say", "Hello Driver");    //
+        telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        runtime.reset();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            // Sets the joystick values to variables for better math understanding
-            // The Y axis goes
-            hws.y = gamepad1.left_stick_y;
-            hws.x = -gamepad1.left_stick_x;
-            hws.rot = -gamepad1.right_stick_x;
+            // Run wheels in POV mode (note: The joystick goes negative when pushed forwards, so negate it)
+            // In this mode the Left stick moves the robot fwd and back, the Right stick turns left and right.
+            // This way it's also easy to just drive straight, or just turn.
+            drive = -gamepad1.left_stick_y;
+            turn  =  gamepad1.right_stick_x;
 
-
-            hws.frontRightPower = hws.y - hws.x - hws.rot;
-            hws.backRightPower = hws.y - hws.x + hws.rot;
-            hws.frontLeftPower = hws.y + hws.x + hws.rot;
-            hws.backLeftPower = hws.y + hws.x - hws.rot;
+            // Combine drive and turn for blended motion.
+            left  = drive + turn;
+            right = drive - turn;
 
             // Normalize the values so neither exceed +/- 1.0
+            max = Math.max(Math.abs(left), Math.abs(right));
+            if (max > 1.0)
+            {
+                left /= max;
+                right /= max;
+            }
 
-            // sets the speed for the motros with the turbo multiplier
-//
-            hws.frontRight.setPower(hws.frontRightPower);
-            hws.backRight.setPower(hws.backRightPower);
-            hws.frontLeft.setPower(hws.frontLeftPower);
-            hws.backLeft.setPower(hws.backLeftPower);
-            telemetry.addData("front right:", hws.frontRight.getPower());
-            telemetry.addData("back right:", hws.backRight.getPower());
-            telemetry.addData("front left:", hws.frontLeft.getPower());
-            telemetry.addData("back left:", hws.backLeft.getPower());
+            // Output the safe vales to the motor drives.
+            robot.frontLeft.setPower(left);
+            robot.backLeft.setPower(left);
 
+            robot.frontRight.setPower(right);
+            robot.backRight.setPower(right);
+
+
+            telemetry.addData("left",  "%.2f", left);
+            telemetry.addData("right", "%.2f", right);
             telemetry.update();
 
-            // Pause for metronome tick.  40 mS each cycle = update 25 times a second.
-
+            // Pace this loop so jaw action is reasonable speed.
             sleep(50);
         }
-        }
     }
-
+}
