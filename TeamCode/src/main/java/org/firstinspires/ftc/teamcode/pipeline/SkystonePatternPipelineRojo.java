@@ -24,11 +24,11 @@ public class SkystonePatternPipelineRojo extends OpenCvPipeline {
     //para mover los rectangulos (las zonas en las que se detecta el color) usa las siguientes variables y
     //no tendras que mover nada mas. La posicion es en relacion al tamano de la vista de la camara
 
-    private static final float rectanguloIzquierdoX = 10f;
-    private static final float rectanguloDerechoX = 9.5f;
+    private static final float rectanguloIzquierdoX = 9f;
+    private static final float rectanguloDerechoX = 8f;
 
-    private static final float rectanguloIzquierdoY = 5.3f;
-    private static final float rectanguloDerechoY = 5.3f;
+    private static final float rectanguloIzquierdoY = 5.1f;
+    private static final float rectanguloDerechoY = 5.1f;
 
 
     //en teoria no hay necesidad de tocar nada a partir de aqui.

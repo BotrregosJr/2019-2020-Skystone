@@ -67,9 +67,12 @@ public class HardwareMecanum
     public DcMotor  intakeLeft     = null;
 
     public CRServo outtake    = null;
-    public Servo    skystone    = null;
     public Servo  foundation    = null;
     public Servo capstone = null;
+    public Servo skystoneRight = null;
+    public Servo    skystoneleft    = null;
+
+
 
     public double frontRightPower;
     public double backRightPower;
@@ -133,13 +136,17 @@ public class HardwareMecanum
 
         // Define and initialize ALL installed servos.
         foundation  = hwMap.get(Servo.class, "FD");
-        skystone = hwMap.get(Servo.class, "SS");
         outtake = hwMap.get(CRServo.class, "OT");
         capstone = hwMap.get(Servo.class, "CP");
 
+        skystoneleft = hwMap.get(Servo.class, "SKL");
+        skystoneRight = hwMap.get(Servo.class,"SKR");
+
         capstone.setPosition(1);
         outtake.setPower(0);
-        skystone.setPosition(.5);
         foundation.setPosition(0);
+
+        skystoneRight.setPosition(0.5);
+        skystoneleft.setPosition(1);
     }
 }

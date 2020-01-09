@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.vuforia;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -42,6 +42,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.HardwareMecanum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +86,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 public class AZUL_2CubosEstacionadaTIEMPO extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwareMecanum         robot   = new HardwareMecanum();   // Use a Pushbot's hardware
+    HardwareMecanum robot   = new HardwareMecanum();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
@@ -400,19 +401,19 @@ public class AZUL_2CubosEstacionadaTIEMPO extends LinearOpMode {
 
         enfrente(.3,.3,.3,.3,520);//
         izquierda(.7,.7,.7,.7,800);
-        robot.skystone.setPosition(0);
+        robot.skystoneleft.setPosition(0);
         sleep(500);
         derecha(.7,.7,.7,.7,1500);
         atras(.4,.4,.4,.4,1400);
-        robot.skystone.setPosition(.4);
+        robot.skystoneleft.setPosition(.4);
         sleep(500);
         enfrente(.4,.4,.4,.4,1500);
         izquierda(.7,.7,.7,.7,1800);
-        robot.skystone.setPosition(0);
+        robot.skystoneleft.setPosition(0);
         sleep(500);
         derecha(.7,.7,.7,.7,1600);
         atras(.5,.5,.5,.5,1800);
-        robot.skystone.setPosition(.4);
+        robot.skystoneleft.setPosition(.4);
         sleep(500);
         enfrente(.3,.3,.3,.3,500);
 
@@ -425,11 +426,11 @@ public class AZUL_2CubosEstacionadaTIEMPO extends LinearOpMode {
 
         enfrente(.3,.3,.3,.3,450);
         izquierda(.7,.7,.7,.7,800);
-        robot.skystone.setPosition(0);
+        robot.skystoneleft.setPosition(0);
         sleep(500);
         derecha(.7,.7,.7,.7,2000);
         atras(.4,.4,.4,.4,1800);
-        robot.skystone.setPosition(.4);
+        robot.skystoneleft.setPosition(.4);
         sleep(500);
         enfrente(.3,.3,.3,.3,500);
         enfrente(0,0,0,0,10000);
@@ -440,11 +441,11 @@ public class AZUL_2CubosEstacionadaTIEMPO extends LinearOpMode {
     public void posicion3 (){
         enfrente(.3,.3,.3,.3,420);
         izquierda(.5,.5,.5,.5,1700);
-        robot.skystone.setPosition(0);
+        robot.skystoneleft.setPosition(0);
         sleep(500);
         derecha(.5,.5,.5,.5,1500);
         atras(.4,.4,.4,.4,2000);
-        robot.skystone.setPosition(.4);
+        robot.skystoneleft.setPosition(.4);
         sleep(500);
         enfrente(.3,.3,.3,.3,500);
         enfrente(0,0,0,0,10000);

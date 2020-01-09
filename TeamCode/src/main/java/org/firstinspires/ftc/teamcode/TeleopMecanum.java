@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -72,6 +73,11 @@ public class TeleopMecanum extends OpMode{
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
+
+        hws.frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        hws.frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        hws.backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        hws.backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     /*
@@ -93,92 +99,30 @@ public class TeleopMecanum extends OpMode{
      */
     @Override
     public void loop() {
-
-        // run until the end of the match (driver presses STOP)
-
-            // Run wheels in POV mode (note: The joystick goes negative when pushed forwards, so negate it)
-            // In this mode the Left stick moves the robot fwd and back, the Right stick turns left and right.
-            // This way it's also easy to just drive straight, or just turn.
-            double turbo;
-            int cero = 0;
-            int cienochenta = 180;
-
-            if (gamepad1.right_bumper) {
-                hws.turbo = 1;
-                turbo = 1;
-            } else {
-                hws.turbo = 1;
-                turbo = 1;
-            }
-
-            //StartA
-
-            if (gamepad1.right_bumper){                  //set power elevador
-                hws.intakeLeft.setPower(1);
-                hws.intakeRight.setPower(1);
-            } else if (gamepad1.left_bumper){
-                hws.intakeLeft.setPower(-1);
-                hws.intakeRight.setPower(-1);
-            } else {
-                hws.intakeLeft.setPower(0);
-                hws.intakeRight.setPower(0);
-            }
-
-            if(gamepad1.dpad_down){
-                hws.skystone.setPosition(.3);
-            } else if (gamepad1.dpad_up){
-                hws.skystone.setPosition(0);
-            }
-
-            if(gamepad1.dpad_right){
-                hws.foundation.setPosition(.4);
-            } else if (gamepad1.dpad_left){
-                hws.foundation.setPosition(0);
-            }
+        double turbo;
 
 
-            //startB
 
-            if (gamepad2.x){
-                hws.transicion.setPower(1);
-            } else if(gamepad2.a){
-                hws. transicion. setPower(-1);
-            } else if(gamepad2.y){
-                hws. transicion. setPower(.75);
-            } else if(gamepad2.b){
-                hws. transicion. setPower(.5);
-            }else{
-                hws.transicion.setPower(0);
-            }
+        int cero = 0;
+        int cienochenta = 180;
 
-            if (gamepad2.dpad_up){
-                hws.slider.setPower(1);
-            } else if (gamepad2.dpad_down){
-                hws.slider.setPower(-1);
-            } else if (gamepad2.right_bumper){
-                hws.slider.setPower(.4);
-            } else{
-                hws.slider.setPower(0);
-            }
-
-
-            if (gamepad2.left_bumper){
-                hws.outtake.setPower(1);
-            } else if (gamepad2.x){
-                hws.outtake.setPower(-1);
-            }else{
-                hws.outtake.setPower(0);
-            }
-
-        if (gamepad2.left_bumper){
-            hws.capstone.setPosition(1);
-        } else if (gamepad2.x){
-            hws.capstone.setPosition(0);
-        }else{
-            hws.capstone.setPosition(0);
+        if (gamepad1.y) {
+            hws.turbo = 0.2;
+            turbo = 0.2;
+        } else {
+            hws.turbo = 1;
+            turbo = 1;
         }
 
-
+/**
+        if (gamepad1.dpad_down){
+            hws.skystoneleft.setPosition(0);
+            hws.skystoneRight.setPosition(1);
+        } else if (gamepad1.dpad_up){
+            hws.skystoneleft.setPosition(1);
+            hws.skystoneRight.setPosition(0.5);
+        }
+*/
             telemetry.addData("Turboooooooo prro", turbo);
             // Sets the joystick values to variables for better math understanding
             // The Y axis goes
@@ -242,15 +186,89 @@ public class TeleopMecanum extends OpMode{
             telemetry.addData("front left:", frontLeftPower);
             telemetry.addData("back left:", backLeftPower);
 
-            telemetry.addData("skystone:", hws.skystone.getPosition());
+            telemetry.addData("skystone:", hws.skystoneleft.getPosition());
             telemetry.addData("foundation:", hws.foundation.getPosition());
 
             // Send telemetry message to signify robot running;
             telemetry.update();
 
             // Pause for metronome tick.  40 mS each cycle = update 25 times a second.
-
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+
+
+        // run until the end of the match (driver presses STOP)
+
+        // Run wheels in POV mode (note: The joystick goes negative when pushed forwards, so negate it)
+        // In this mode the Left stick moves the robot fwd and back, the Right stick turns left and right.
+        // This way it's also easy to just drive straight, or just turn.
+
+        //StartA
+
+        if (gamepad1.right_bumper){                  //set power elevador
+            hws.intakeLeft.setPower(1);
+            hws.intakeRight.setPower(1);
+        } else if (gamepad1.left_bumper){
+            hws.intakeLeft.setPower(-1);
+            hws.intakeRight.setPower(-1);
+        } else {
+            hws.intakeLeft.setPower(0);
+            hws.intakeRight.setPower(0);
+        }
+/*
+            if(gamepad1.dpad_down){
+                hws.skystoneleft.setPosition(.3);
+            } else if (gamepad1.dpad_up){
+                hws.skystoneleft.setPosition(0);
+            }
+*/
+        if(gamepad1.dpad_right){
+            hws.foundation.setPosition(.4);
+        } else if (gamepad1.dpad_left){
+            hws.foundation.setPosition(0);
+        }
+
+
+        //startB
+
+        if (gamepad2.x){
+            hws.transicion.setPower(1);
+        } else if(gamepad2.a){
+            hws. transicion. setPower(-1);
+        } else if(gamepad2.b){
+            hws. transicion. setPower(.5);
+        }else{
+            hws.transicion.setPower(0);
+        }
+
+        if (gamepad2.dpad_up){
+            hws.slider.setPower(1);
+        } else if (gamepad2.dpad_down){
+            hws.slider.setPower(-1);
+        } else if (gamepad2.right_bumper){
+            hws.slider.setPower(.4);
+        } else{
+            hws.slider.setPower(0);
+        }
+
+
+        if (gamepad2.left_bumper){
+            hws.outtake.setPower(1);
+
+        }else{
+            hws.outtake.setPower(0);
+        }
+
+        if (gamepad2.y){
+            hws.capstone.setPosition(0);
+        } else if (gamepad2.dpad_right){
+            hws.capstone.setPosition(0.8);
+        }
+
+    }
 
     /*
      * Code to run ONCE after the driver hits STOP

@@ -27,11 +27,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Foundationestacion;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.HardwareMecanum;
 
 /**
  * This file illustrates the concept of driving a path based on time.
@@ -54,9 +56,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Autonomocosmicrregos", group="Pushbot")
+@Autonomous(name="Autonomo", group="Pushbot")
 
-public class Autonomowait extends LinearOpMode {
+public class Autonomo extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareMecanum robot   = new HardwareMecanum();   // Use a Pushbot's hardware
@@ -86,26 +88,14 @@ public class Autonomowait extends LinearOpMode {
 
         // Step 1:  Drive forward for 3 seconds
         robot.backLeft.setPower(-.7);
-        robot.frontLeft.setPower(-.7);
-        robot.backRight.setPower(-.7);
-        robot.frontRight.setPower(-.7);
-        sleep(2500);
+        robot.frontLeft.setPower(.7);
+        robot.backRight.setPower(.7);
+        robot.frontRight.setPower(.7);
+        sleep(250);
         robot.backLeft.setPower(0);
         robot.frontLeft.setPower(0);
         robot.backRight.setPower(0);
         robot.frontRight.setPower(0);
-        sleep(25000);
-        robot.backLeft.setPower(1);
-        robot.frontLeft.setPower(1);
-        robot.backRight.setPower(1);
-        robot.frontRight.setPower(1);
-        sleep(2000);
-        robot.backLeft.setPower(0);
-        robot.frontLeft.setPower(0);
-        robot.backRight.setPower(0);
-        robot.frontRight.setPower(0);
-        sleep(50000);
-
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

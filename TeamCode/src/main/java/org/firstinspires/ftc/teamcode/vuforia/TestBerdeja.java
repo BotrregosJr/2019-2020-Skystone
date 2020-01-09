@@ -1,4 +1,4 @@
-/* Copyright (c) 2017 FIRST. All rights reserved.
+/* Copyright (c) 2019 FIRST. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted (subject to the limitations in the disclaimer below) provided that
@@ -27,10 +27,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.vuforia;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -41,9 +45,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.HardwareMecanum;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import java.lang.InterruptedException;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
@@ -53,69 +60,97 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
 
 /**
- * This file illustrates the concept of driving a path based on encoder counts.
- * It uses the common Pushbot hardware class to define the drive on the robot.
+ * This 2019-2020 OpMode illustrates the basics of using the Vuforia localizer to determine
+ * positioning and orientation of robot on the SKYSTONE FTC field.
  * The code is structured as a LinearOpMode
  *
- * The code REQUIRES that you DO have encoders on the wheels,
- *   otherwise you would use: PushbotAutoDriveByTime;
+ * When images are located, Vuforia is able to determine the position and orientation of the
+ * image relative to the camera.  This sample code then combines that information with a
+ * knowledge of where the target images are on the field, to determine the location of the camera.
  *
- *  This code ALSO requires that the drive Motors have been configured such that a positive
- *  power command moves them forwards, and causes the encoders to count UP.
+ * From the Audience perspective, the Red Alliance station is on the right and the
+ * Blue Alliance Station is on the left.
+
+ * Eight perimeter targets are distributed evenly around the four perimeter walls
+ * Four Bridge targets are located on the bridge uprights.
+ * Refer to the Field Setup manual for more specific location details
  *
- *   The desired path in this example is:
- *   - Drive forward for 48 inches
- *   - Spin right for 12 Inches
- *   - Drive Backwards for 24 inches
- *   - Stop and close the claw.
+ * A final calculation then uses the location of the camera on the robot to determine the
+ * robot's location and orientation on the field.
  *
- *  The code is written using a method called: encoderDrive(speed, leftInches, rightInches, timeoutS)
- *  that performs the actual movement.
- *  This methods assumes that each movement is relative to the last stopping place.
- *  There are other ways to perform encoder based moves, but this method is probably the simplest.
- *  This code uses the RUN_TO_POSITION mode to enable the Motor controllers to generate the run profile
+ * @see VuforiaLocalizer
+ * @see VuforiaTrackableDefaultListener
+ * see  skystone/doc/tutorial/FTC_FieldCoordinateSystemDefinition.pdf
  *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
+ * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
+ *
+ * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
+ * is explained below.
  */
 
-@Autonomous(name="ROJO_2CubosEstacionadaTIEMPO", group="AUT")
-//@Disabled
-public class ROJO_2CubosEstacionadaTIEMPO extends LinearOpMode {
 
-    /* Declare OpMode members. */
-    HardwareMecanum         robot   = new HardwareMecanum();   // Use a Pushbot's hardware
-    private ElapsedTime     runtime = new ElapsedTime();
+@Autonomous(name="ULTRA BIG CHALE", group ="Concept")
+@Disabled
+public class TestBerdeja extends LinearOpMode {
+    HardwareMecanum hws       = new HardwareMecanum(); // use the class created to define a Pushbot's hardware
+    private ElapsedTime runtime = new ElapsedTime();
+
+
+
+    // IMPORTANT:  For Phone Camera, set 1) the camera source and 2) the orientation, based on how your phone is mounted:
+    // 1) Camera Source.  Valid choices are:  BACK (behind screen) or FRONT (selfie side)
+    // 2) Phone Orientation. Choices are: PHONE_IS_PORTRAIT = true (portrait) or PHONE_IS_PORTRAIT = false (landscape)
+    //
+    // NOTE: If you are running on a CONTROL HUB, with only one USB WebCam, you must select CAMERA_CHOICE = BACK; and PHONE_IS_PORTRAIT = false;
+    //
+    private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = FRONT;
+
+    private static final boolean PHONE_IS_PORTRAIT = false  ;
+
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-                                                      (WHEEL_DIAMETER_INCHES * 3.1415);
+            (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
-
-
-    private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = FRONT;
-    private static final boolean PHONE_IS_PORTRAIT = false  ;
-
+    /*
+     * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
+     * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
+     * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
+     * web site at https://developer.vuforia.com/license-manager.
+     *
+     * Vuforia license keys are always 380 characters long, and look as if they contain mostly
+     * random data. As an example, here is a example of a fragment of a valid key:
+     *      ... yIgIzTqZ4mWjk9wd3cZO9T1axEqzuhxoGlfOOI2dRzKS4T0hQ8kT ...
+     * Once you've obtained a license key, copy the string from the Vuforia web site
+     * and paste it in to your code on the next line, between the double quotes.
+     */
     private static final String VUFORIA_KEY =
             "AVV2DpH/////AAABmWq84z/KikkDsWAv/6WnE1Bj4NSnsO5+T1xRkbionzAieAm6mQKRcPxuJ6OODD2aJrqJzn47/dng9RLB1bPt+7CPkPISgem7I6YtUz80UVwZfRvwXp5rfygklt4tBeqaZCvFUgh10uVTaWFJSaCrKo9iE3asOfPmrZRiTHFJmbQHrriRRfoaiMEUu/9MNLmq9akbPSoVeT5OG7Vfq9a7L0/lhlFZgqw/H6WkVI9taSamyFEiikUmNvJ+DwccsDe3sXIAOEZnNSFD5ZhnRAXNNJdojuebUpeoSCMJHC26EY00LNZrUhs+BIV6SYgALiaN7WoXO4o9A5myfB4/gTka+92nKQ/Y8Zr4FYC5G/NOCWvJ";
 
+    // Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
+    // We will define some constants and conversions here
     private static final float mmPerInch        = 25.4f;
     private static final float mmTargetHeight   = (12) * mmPerInch;          // the height of the center of the target image above the floor
 
+    // Constant for Stone Target
     private static final float stoneZ = 2.00f * mmPerInch;
 
+    // Constants for the center support targets
     private static final float bridgeZ = 6.42f * mmPerInch;
     private static final float bridgeY = 23 * mmPerInch;
     private static final float bridgeX = 5.18f * mmPerInch;
     private static final float bridgeRotY = 59;                                 // Units are degrees
     private static final float bridgeRotZ = 180;
 
+    // Constants for perimeter targets
     private static final float halfField = 72 * mmPerInch;
     private static final float quadField  = 36 * mmPerInch;
 
+    // Class Members
     private OpenGLMatrix lastLocation = null;
     private VuforiaLocalizer vuforia = null;
     private boolean targetVisible = false;
@@ -123,27 +158,30 @@ public class ROJO_2CubosEstacionadaTIEMPO extends LinearOpMode {
     private float phoneYRotate    = 0;
     private float phoneZRotate    = 0;
 
-    @Override
-    public void runOpMode() {
+    @Override public void runOpMode() {
 
-        /*
-         * Initialize the drive system variables.
-         * The init() method of the hardware class does all the work here
-         */
-        robot.init(hardwareMap);
+        hws.init(hardwareMap); //
 
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Resetting Encoders");    //
-        telemetry.update();
+        hws.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hws.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hws.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hws.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        hws.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hws.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hws.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hws.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
-        // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0",  "Starting at %7d :%7d :%7d :%7d",
-                          robot.frontLeft.getCurrentPosition(),
-                          robot.frontRight.getCurrentPosition(),
-                robot.backLeft.getCurrentPosition(),
-                robot.backRight.getCurrentPosition());
-        telemetry.update();
+        // Send telemetry message to indicate successful Encoder reset.
+        telemetry.addData("Path0",  "Starting at %7d :%7d : %7d :%7d",
+                hws.frontLeft.getCurrentPosition(),
+                hws.frontRight.getCurrentPosition(),
+                hws.backRight.getCurrentPosition(),
+                hws.backLeft.getCurrentPosition());
+
+
+
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          * We can pass Vuforia the handle to a camera preview resource (on the RC phone);
@@ -303,8 +341,8 @@ public class ROJO_2CubosEstacionadaTIEMPO extends LinearOpMode {
         final float CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
 
         OpenGLMatrix robotFromCamera = OpenGLMatrix
-                .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, YZX, DEGREES, phoneYRotate, phoneZRotate, phoneXRotate));
+                    .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
+                    .multiplied(Orientation.getRotationMatrix(EXTRINSIC, YZX, DEGREES, phoneYRotate, phoneZRotate, phoneXRotate));
 
         /**  Let all the trackable listeners know where the phone is.  */
         for (VuforiaTrackable trackable : allTrackables) {
@@ -319,17 +357,20 @@ public class ROJO_2CubosEstacionadaTIEMPO extends LinearOpMode {
 
         waitForStart();
 
-        // Step through each leg of the path,
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        izquierda(.5,.5,.5,.5,1600);
-        enfrente(.3,.3,.3,.3,500);
+        telemetry.addData("Avanza a continuacion", "none");
+        telemetry.update();
 
+        encoderDrive(.3,-15,15,15,-15,1);
+        encoderDrive(.3,-30,30,30,-30,1);
+
+        telemetry.addData("Ya se movio", "none");
+        telemetry.update();
+
+        // Note: To use the remote camera preview:
+        // AFTER you hit Init on the Driver Station, use the "options menu" to select "Camera Stream"
+        // Tap the preview window to receive a fresh image.
 
         targetsSkyStone.activate();
-        telemetry.addData("Wait", "");
-        telemetry.update();
-        sleep(1000);
-
         while (!isStopRequested()) {
 
             // check all the trackable targets to see which one (if any) is visible.
@@ -349,37 +390,32 @@ public class ROJO_2CubosEstacionadaTIEMPO extends LinearOpMode {
                 }
             }
 
+            sleep(2000);
             // Provide feedback as to where the robot is located (if we know).
             if (targetVisible) {
-                float skystoney = 1000;
                 // express position (translation) of robot in inches.
                 VectorF translation = lastLocation.getTranslation();
                 telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
                         translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
 
-                skystoney = translation.get(1);
+                float skystoney = translation.get(1);
 
                 // express the rotation of the robot in degrees.
                 Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
                 telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
 
-                    sleep(1000);
+                if (skystoney > -4 || skystoney < 0 ){
+                telemetry.addData("posicion", "1");
+                telemetry.update();
+                } else if (skystoney > 1 || skystoney < 10){
+                    telemetry.addData("posicionDOS", "2");
+                    telemetry.update();
+                }
 
-                    if (robot.conteo == 1){
-                        posicion1();
-                    } else if (robot.conteo == 2){
-                        posicion2();
-                    } else if (robot.conteo == 3 ){
-                        posicion3();
-                    }
 
             }
             else {
                 telemetry.addData("Visible Target", "none");
-                robot.conteo = robot.conteo + 1;
-                telemetry.addData("Conteo", "%d", robot.conteo);
-                atras(.3,.3,.3,.3,450);
-                sleep(1000);
             }
             telemetry.update();
         }
@@ -388,137 +424,73 @@ public class ROJO_2CubosEstacionadaTIEMPO extends LinearOpMode {
         targetsSkyStone.deactivate();
     }
 
-    /*
-     *  Method to perfmorm a relative move, based on encoder counts.
-     *  Encoders are not reset as the move is based on the current position.
-     *  Move will stop if any of three conditions occur:
-     *  1) Move gets to the desired position
-     *  2) Move runs out of time
-     *  3) Driver stops the opmode running.
-     */
+    public void encoderDrive(double speed,
+                             double frontleft, double frontright,
+                             double backleft, double backright,
+                             double timeoutS) {
+        int newFrontLeftTarget;
+        int newFrontRightTarget;
+        int newBackLeftTarget;
+        int newBackRightTarget;
 
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
 
-    public void posicion1 (){
-        telemetry.addData("posicionUNO", "1");
-        telemetry.update();
+            // Determine new target position, and pass to motor controller
+            newFrontLeftTarget = hws.frontLeft.getCurrentPosition() + (int)(frontleft * COUNTS_PER_INCH);
+            newFrontRightTarget = hws.frontRight.getCurrentPosition() + (int)(frontright * COUNTS_PER_INCH);
+            newBackLeftTarget = hws.backLeft.getCurrentPosition() + (int)(backleft * COUNTS_PER_INCH);
+            newBackRightTarget = hws.backRight.getCurrentPosition() + (int)(backright * COUNTS_PER_INCH);
 
-        atras(.3,.3,.3,.3,520);
-        izquierda(.5,.5,.5,.5,1600);
-        robot.skystone.setPosition(0);
-        sleep(500);
-        derecha(.5,.5,.5,.5,1500);
-        enfrente(.4,.4,.4,.4,1400);
-        robot.skystone.setPosition(.4);
-        sleep(500);
-        atras(.4,.4,.4,.4,1500);
-        izquierda(.5,.5,.5,.5,1600);
-        robot.skystone.setPosition(0);
-        sleep(500);
-        derecha(.5,.5,.5,.5,1500);
-        enfrente(.4,.4,.4,.4,1400);
-        robot.skystone.setPosition(.4);
-        sleep(500);
-        atras(.3,.3,.3,.3,500);
+            hws.frontLeft.setTargetPosition(newFrontLeftTarget);
+            hws.frontRight.setTargetPosition(newFrontRightTarget);
+            hws.backLeft.setTargetPosition(newBackLeftTarget);
+            hws.backRight.setTargetPosition(newBackRightTarget);
 
-        enfrente(0,0,0,0,10000);
-        robot.conteo = 0;
-    }
-    public void posicion2 (){
-        telemetry.addData("posicionDOS", "2");
-        telemetry.update();
+            // Turn On RUN_TO_POSITION
+            hws.frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            hws.frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            hws.backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            hws.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        atras(.3,.3,.3,.3,520);
-        izquierda(.5,.5,.5,.5,1600);
-        robot.skystone.setPosition(0);
-        sleep(500);
-        derecha(.5,.5,.5,.5,1500);
-        enfrente(.4,.4,.4,.4,1800);
-        robot.skystone.setPosition(.4);
-        sleep(500);
-        atras(.4,.4,.4,.4,1500);
-        izquierda(.5,.5,.5,.5,1600);
-        robot.skystone.setPosition(0);
-        sleep(500);
-        derecha(.5,.5,.5,.5,1500);
-        enfrente(.4,.4,.4,.4,1400);
-        robot.skystone.setPosition(.4);
-        sleep(500);
-        atras(.3,.3,.3,.3,500);
+            // reset the timeout time and start motion.
+            runtime.reset();
+            hws.frontLeft.setPower(Math.abs(speed));
+            hws.frontRight.setPower(Math.abs(speed));
+            hws.backLeft.setPower(Math.abs(speed));
+            hws.backRight.setPower(Math.abs(speed));
 
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (hws.frontRight.isBusy() && hws.frontLeft.isBusy() && hws.backRight.isBusy() && hws.backLeft.isBusy() )) {
 
-        enfrente(0,0,0,0,10000);
-        robot.conteo = 0;
+                // Display it for the driver.
+                telemetry.addData("Path1",  "Running to %7d :%7d : %7d :%7d", newFrontLeftTarget,  newFrontRightTarget, newBackLeftTarget, newBackRightTarget);
+                telemetry.addData("Path2",  "Running at %7d :%7d : %7d :%7d",
+                        hws.frontLeft.getCurrentPosition(),
+                        hws.frontRight.getCurrentPosition(), hws.backLeft.getCurrentPosition(),
+                        hws.backRight.getCurrentPosition());
+                telemetry.update();
+            }
 
-    }
-    public void posicion3 (){
-        enfrente(.3,.3,.3,.3,420);
-        izquierda(.5,.5,.5,.5,1600);
-        robot.skystone.setPosition(0);
-        sleep(500);
-        derecha(.5,.5,.5,.5,1500);
-        atras(.4,.4,.4,.4,2000);
-        robot.skystone.setPosition(.4);
-        sleep(500);
-        atras(.4,.4,.4,.4,1500);
-        izquierda(.5,.5,.5,.5,1600);
-        robot.skystone.setPosition(0);
-        sleep(500);
-        derecha(.5,.5,.5,.5,1500);
-        enfrente(.4,.4,.4,.4,1400);
-        robot.skystone.setPosition(.4);
-        sleep(500);
-        atras(.3,.3,.3,.3,500);
+            // Stop all motion;
+            hws.frontRight.setPower(0);
+            hws.frontLeft.setPower(0);
+            hws.backLeft.setPower(0);
+            hws.backRight.setPower(0);
 
-        enfrente(0,0,0,0,10000);
-        robot.conteo = 0;
-    }
-
-    public void enfrente (double frontRightPower, double backRightPower, double frontLeftPower, double backLeftPower, long tiempo){
-        robot.frontRight.setPower(frontRightPower);
-        robot.backRight.setPower(backRightPower);
-        robot.frontLeft.setPower(frontLeftPower);
-        robot.backLeft.setPower(backLeftPower);
-        sleep(tiempo);
-        robot.frontRight.setPower(0);
-        robot.backRight.setPower(0);
-        robot.frontLeft.setPower(0);
-        robot.backLeft.setPower(0);
-        sleep(500);
-    }
-    public void atras (double frontRightPower, double backRightPower, double frontLeftPower, double backLeftPower, long tiempo){
-        robot.frontRight.setPower(-frontRightPower);
-        robot.backRight.setPower(-backRightPower);
-        robot.frontLeft.setPower(-frontLeftPower);
-        robot.backLeft.setPower(-backLeftPower);
-        sleep(tiempo);
-        robot.frontRight.setPower(0);
-        robot.backRight.setPower(0);
-        robot.frontLeft.setPower(0);
-        robot.backLeft.setPower(0);
-        sleep(500);
-    }
-    public void izquierda (double frontRightPower, double backRightPower, double frontLeftPower, double backLeftPower, long tiempo){
-        robot.frontRight.setPower(frontRightPower);
-        robot.backRight.setPower(-backRightPower);
-        robot.frontLeft.setPower(-frontLeftPower);
-        robot.backLeft.setPower(backLeftPower);
-        sleep(tiempo);
-        robot.frontRight.setPower(0);
-        robot.backRight.setPower(0);
-        robot.frontLeft.setPower(0);
-        robot.backLeft.setPower(0);
-        sleep(500);
-    }
-    public void derecha (double frontRightPower, double backRightPower, double frontLeftPower, double backLeftPower, long tiempo){
-        robot.frontRight.setPower(-frontRightPower);
-        robot.backRight.setPower(backRightPower);
-        robot.frontLeft.setPower(frontLeftPower);
-        robot.backLeft.setPower(-backLeftPower);
-        sleep(tiempo);
-        robot.frontRight.setPower(0);
-        robot.backRight.setPower(0);
-        robot.frontLeft.setPower(0);
-        robot.backLeft.setPower(0);
-        sleep(500);
+            // Turn off RUN_TO_POSITION
+            hws.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            hws.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            hws.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            hws.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            //  sleep(250);   // optional pause after each move
+        }
     }
 }
