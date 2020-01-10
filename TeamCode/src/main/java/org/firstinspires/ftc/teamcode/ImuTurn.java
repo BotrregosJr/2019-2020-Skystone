@@ -26,15 +26,15 @@ public class ImuTurn {
     double globalAngle;
 
     Telemetry telemetry;
-
     HardwareMap hardwareMap;
-
     LinearOpMode currentOpMode;
+    HardwareMap hdwMap;
 
     public ImuTurn(){
         this.hdw = hdw;
         this.telemetry = telemetry;
         this.currentOpMode = currentOpMode;
+
         this.hardwareMap = hdwMap;
     }
 
@@ -206,14 +206,14 @@ public class ImuTurn {
 
         telemetry.addData("currentAngle", getAngle());
         telemetry.addData("beforeAngle", beforeAngle);
-        telemetry.addData("deltaAngle", deltaAngle);
+        telemetry.addData("finalAngle", deltaAngle);
         telemetry.update();
 
         while(deltaAngle != 0){
 
             telemetry.addData("currentAngle", getAngle());
             telemetry.addData("beforeAngle", beforeAngle);
-            telemetry.addData("deltaAngle", deltaAngle);
+            telemetry.addData("finalAngle", deltaAngle);
             telemetry.update();
 
             deltaAngle = getAngle() - beforeAngle;
