@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.HardwareMecanum;
+import org.firstinspires.ftc.teamcode.ImuTurn;
 import org.firstinspires.ftc.teamcode.pipeline.SkystonePatternPipelineAzul;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -20,6 +21,7 @@ public class AutonomoSkystoneAzul extends LinearOpMode {
     int pattern = 0;
 
     HardwareMecanum robot   = new HardwareMecanum();   // Use a Pushbot's hardware
+    ImuTurn imu = new ImuTurn();
 
     @Override
     public void runOpMode() {
