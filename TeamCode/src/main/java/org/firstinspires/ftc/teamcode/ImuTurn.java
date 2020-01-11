@@ -10,6 +10,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+
 
 public class ImuTurn {
 
@@ -30,7 +32,7 @@ public class ImuTurn {
     LinearOpMode currentOpMode;
     HardwareMap hdwMap;
 
-    public ImuTurn(){
+    public ImuTurn(HardwareMecanum hdw, Telemetry telemetry, LinearOpMode currentOpMode, HardwareMap hdwMap){
         this.hdw = hdw;
         this.telemetry = telemetry;
         this.currentOpMode = currentOpMode;
@@ -157,7 +159,7 @@ public class ImuTurn {
         double deltaAngle = calculateDeltaAngles(expectedAngle, getAngle());
         telemetry.addData("error", deltaAngle);
         telemetry.update();
-        rotate(deltaAngle, 0.15);
+        rotate(deltaAngle, 0.4);
 
     }
 
@@ -180,10 +182,10 @@ public class ImuTurn {
     }
 
     private void defineAllWheelPower(double frontleft, double frontright, double backleft, double backright){
-        hdw.frontLeft.setPower(-frontleft);
-        hdw.frontRight.setPower(-frontright);
-        hdw.backLeft.setPower(-backleft);
-        hdw.backRight.setPower(-backright);
+        hdw.frontLeft.setPower(frontleft);
+        hdw.frontRight.setPower(frontright);
+        hdw.backLeft.setPower(backleft);
+        hdw.backRight.setPower(backright);
     }
 
     public void sleep(long millis){

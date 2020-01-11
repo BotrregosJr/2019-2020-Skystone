@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Autonomosopencv;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.HardwareMecanum;
@@ -12,6 +13,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
+@Disabled
 @Autonomous(name="Autonomo Skystone Azul", group="Final")
 public class AutonomoSkystoneAzul extends LinearOpMode {
 
@@ -21,13 +23,17 @@ public class AutonomoSkystoneAzul extends LinearOpMode {
     int pattern = 0;
 
     HardwareMecanum robot   = new HardwareMecanum();   // Use a Pushbot's hardware
-    ImuTurn imu = new ImuTurn();
+    ImuTurn imu ;
 
     @Override
     public void runOpMode() {
 
         robot.init(hardwareMap);
+        imu = new ImuTurn(robot, telemetry, this, hardwareMap);
 
+        while(!imu.isIMUCalibrated()){
+
+        }
         //falta hacer t.odo lo del hardware, no se como lo tengas hecho asi que lo dejo asi.
 
         //obtenemos la id del monitor de la camara (la vista de la camara que se vera desde el robot controller)

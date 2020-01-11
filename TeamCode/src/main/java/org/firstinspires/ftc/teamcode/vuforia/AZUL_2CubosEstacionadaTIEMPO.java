@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.vuforia;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -82,7 +83,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  */
 
 @Autonomous(name="AZUL_2CubosEstacionadaTIEMPO", group="AUT")
-//@Disabled
+@Disabled
 public class AZUL_2CubosEstacionadaTIEMPO extends LinearOpMode {
 
     /* Declare OpMode members. */

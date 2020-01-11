@@ -103,8 +103,7 @@ public class TeleopMecanum extends OpMode{
 
 
 
-        int cero = 0;
-        int cienochenta = 180;
+
 
         if (gamepad1.y) {
             hws.turbo = 0.2;

@@ -31,7 +31,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -48,16 +47,16 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import java.util.Locale;
 
 /**
- * {@link PruebaSensorBNO055IMU} gives a short demo on how to use the BNO055 Inertial Motion Unit (IMU) from AdaFruit.
+ * {@link SensorBNO055IMU} gives a short demo on how to use the BNO055 Inertial Motion Unit (IMU) from AdaFruit.
  *
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  *
  * @see <a href="http://www.adafruit.com/products/2472">Adafruit IMU</a>
  */
-@Autonomous(name = "turn test", group = "Sensor")
+@TeleOp(name = "Sensor: BNO055 IMU", group = "Sensor")
 //@Disabled                            // Comment this out to add to the opmode list
-public class PruebaSensorBNO055IMU extends LinearOpMode
+public class SensorBNO055IMU extends LinearOpMode
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -102,28 +101,11 @@ public class PruebaSensorBNO055IMU extends LinearOpMode
         // Start the logging of measured acceleration
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
-        telemetry.addData("avanza","");
-        telemetry.update();
-        sleep(2000);
-        while (angles.firstAngle < 30){
-            telemetry.addData("gira","");
+        // Loop and update the dashboard
+        while (opModeIsActive()) {
             telemetry.update();
         }
-        telemetry.addData("alto","");
-        telemetry.update();
-        sleep(5000);
     }
-
-
-
-
-
-
-
-
-
-
-
 
     //----------------------------------------------------------------------------------------------
     // Telemetry Configuration

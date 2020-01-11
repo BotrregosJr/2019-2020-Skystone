@@ -15,7 +15,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
-@Autonomous(name="Autonomo Skystone Azul imu", group="Final")
+@Autonomous(name="Autonomo Skystone Rojo imu", group="Final")
 public class autonomoSkystoneRojoIMUEncoder extends LinearOpMode {
 
     private OpenCvCamera phoneCam;
@@ -24,7 +24,7 @@ public class autonomoSkystoneRojoIMUEncoder extends LinearOpMode {
     int pattern = 0;
 
     HardwareMecanum robot   = new HardwareMecanum();   // Use a Pushbot's hardware
-    ImuTurn imu = new ImuTurn();
+    ImuTurn imu;
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
@@ -41,7 +41,12 @@ public class autonomoSkystoneRojoIMUEncoder extends LinearOpMode {
     public void runOpMode() {
 
         robot.init(hardwareMap);
+        imu = new ImuTurn(robot, telemetry, this, hardwareMap);
 
+        imu.initIMU();
+        while(!imu.isIMUCalibrated()){
+
+        }
         //falta hacer t.odo lo del hardware, no se como lo tengas hecho asi que lo dejo asi.
 
 

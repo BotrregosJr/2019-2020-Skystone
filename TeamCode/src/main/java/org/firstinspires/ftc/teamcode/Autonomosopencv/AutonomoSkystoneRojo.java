@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Autonomosopencv;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.HardwareMecanum;
@@ -10,7 +11,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
-
+@Disabled
 @Autonomous(name="Autonomo Skystone Rojo", group="Final")
 public class AutonomoSkystoneRojo extends LinearOpMode {
 
@@ -19,8 +20,7 @@ public class AutonomoSkystoneRojo extends LinearOpMode {
 
     int pattern = 0;
     HardwareMecanum robot   = new HardwareMecanum();   // Use a Pushbot's hardware
-
-    @Override
+@Override
     public void runOpMode() {
         robot.init(hardwareMap);
 
