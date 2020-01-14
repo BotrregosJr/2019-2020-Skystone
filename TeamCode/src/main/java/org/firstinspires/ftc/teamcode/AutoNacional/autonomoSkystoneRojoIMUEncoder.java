@@ -126,6 +126,16 @@ public class autonomoSkystoneRojoIMUEncoder extends LinearOpMode {
 
         }else if(pattern == 3){//posicion 1
 
+            imu.rotate(80,0.3);
+            sleep(500);
+          //  encoderDrive(0.7,-2,-2,-2,-2,4);
+            encoderDrive(0.3,5,5,5,5,4);
+            robot.skystoneRight.setPosition(1);
+            sleep(1000);
+
+
+
+
 
         }else{
             //en teoria este codigo nunca se deberia de ejecutar, pero por si las dudas...
