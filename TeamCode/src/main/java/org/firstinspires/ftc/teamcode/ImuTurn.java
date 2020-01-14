@@ -94,6 +94,12 @@ public class ImuTurn {
     {
         double  backleftpower, backrightpower, frontrightpower, frontleftpower;
 
+        hdw.frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        hdw.frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        hdw.backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        hdw.backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
         // reiniciamos el IMU
         resetAngle();
 

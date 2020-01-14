@@ -91,11 +91,15 @@ public class FounationAzul extends LinearOpMode {
         robot.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+
+
+
         imu = new ImuTurn(robot, telemetry, this, hardwareMap);
 
         imu.initIMU();
 
         while(!imu.isIMUCalibrated()){
+
 
         }
 
@@ -105,7 +109,7 @@ public class FounationAzul extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        //encoderDrive(1,2,-2,-2,2,4.0);
+        encoderDrive(1,2,-2,-2,2,4.0);
 
         //encoderDrive(.3,-6,-6,-6,-6,4.0);
         //robot.foundation.setPosition(0.5);
@@ -114,8 +118,8 @@ public class FounationAzul extends LinearOpMode {
 
 
 
-       telemetry.addData("turning",imu.getIMUCalibrationStatus(),0);
-       telemetry.update();
+
+
     }
 
     public void encoderDrive(double speed,

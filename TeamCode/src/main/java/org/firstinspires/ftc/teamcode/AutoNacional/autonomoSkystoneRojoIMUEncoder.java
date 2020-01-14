@@ -115,7 +115,13 @@ public class autonomoSkystoneRojoIMUEncoder extends LinearOpMode {
         if(pattern == 1){//posicion 3
 
 
+
+
+
         }else if(pattern == 2){ //posicion 2
+
+
+
 
 
         }else if(pattern == 3){//posicion 1
