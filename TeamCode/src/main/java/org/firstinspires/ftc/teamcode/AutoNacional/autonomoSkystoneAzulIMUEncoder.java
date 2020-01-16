@@ -112,12 +112,61 @@ public class autonomoSkystoneAzulIMUEncoder extends LinearOpMode {
         telemetry.update();
 
         if(pattern == 1){//posicion 3
+            encoderDrive(0.5,1.5,1.5,1.5,1.5,4);
+
+            imu.rotate(85,0.4);
+            encoderDrive(0.5,-3,-3,-3,-3,4);
+            encoderDrive(0.3,6,6,6,6,4);
+            robot.skystoneRight.setPosition(1);
+            sleep(1000);
+             encoderDrive(0.5,-0.5,-0.5,-0.5,-0.5,4);
+            imu.rotate(80,0.5);
+            encoderDrive(0.5,10,10,10,10,2);
+            robot.skystoneRight.setPosition(0.2);
+            sleep(1000);
+
+            encoderDrive(0.5,-3,-3,-3,-3,2);
 
 
         }else if(pattern == 2){ //posicion 2
 
+            imu.rotate(85,0.4);
+            encoderDrive(0.5,-3,-3,-3,-3,4);
+            encoderDrive(0.3,6,6,6,6,4);
+            //imu.rotate(-5,0.5);
+            robot.skystoneRight.setPosition(1);
+            sleep(1000);
+             encoderDrive(0.5,-0.5,-0.5,-0.5,-0.5,4);
+            imu.rotate(80,0.5);
+            encoderDrive(0.5,10,10,10,10,2);
+            robot.skystoneRight.setPosition(0);
+            sleep(1000);
+
+            encoderDrive(0.5,-4,-4,-4,-4,2);
+
+
 
         }else if(pattern == 3){//posicion 1
+            encoderDrive(0.5,1.5,1.5,1.5,1.5,4);
+
+            imu.rotate(85,0.4);
+            encoderDrive(0.5,-3,-3,-3,-3,4);
+            encoderDrive(0.3,6,6,6,6,4);
+            robot.skystoneleft.setPosition(0);
+            sleep(1000);
+           // encoderDrive(0.5,-0.5,-0.5,-0.5,-0.5,4);
+            imu.rotate(80,0.5);
+            encoderDrive(0.5,10,10,10,10,2);
+            robot.skystoneleft.setPosition(1);
+            sleep(1000);
+
+            encoderDrive(0.5,-3,-3,-3,-3,2);
+
+
+
+
+
+
 
 
         }else{

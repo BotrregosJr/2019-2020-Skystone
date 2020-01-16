@@ -113,6 +113,21 @@ public class autonomoSkystoneRojoIMUEncoder extends LinearOpMode {
         telemetry.update();
 
         if(pattern == 1){//posicion 3
+            // encoderDrive(0.5,-1.5,-1.5,-1.5,-1.5,4);
+            //encoderDrive(0.3,0.5,0.5,0.5,0.5,4);
+
+            imu.rotate(85,0.4);
+            encoderDrive(0.5,-3,-3,-3,-3,4);
+            encoderDrive(0.3,6,6,6,6,4);
+            robot.skystoneleft.setPosition(0);
+            sleep(1000);
+             encoderDrive(0.5,-1,-1,-1,-1,4);
+            imu.rotate(-85,0.4);
+            encoderDrive(0.5,10,10,10,10,2);
+            robot.skystoneleft.setPosition(1);
+            sleep(1000);
+
+            encoderDrive(0.5,-3,-3,-3,-3,2);
 
 
 
@@ -120,18 +135,45 @@ public class autonomoSkystoneRojoIMUEncoder extends LinearOpMode {
 
         }else if(pattern == 2){ //posicion 2
 
+            encoderDrive(0.5,-1.5,-1.5,-1.5,-1.5,4);
+
+            imu.rotate(85,0.4);
+            encoderDrive(0.5,-3,-3,-3,-3,4);
+            encoderDrive(0.3,6,6,6,6,4);
+            robot.skystoneRight.setPosition(1);
+            sleep(1000);
+            // encoderDrive(0.5,-0.5,-0.5,-0.5,-0.5,4);
+            imu.rotate(-85,0.5);
+            encoderDrive(0.5,11,11,11,11,2);
+            robot.skystoneRight.setPosition(0);
+            sleep(1000);
+
+            encoderDrive(0.5,-3,-3,-3,-3,2);
+
 
 
 
 
         }else if(pattern == 3){//posicion 1
 
-            imu.rotate(80,0.3);
-            sleep(500);
-          //  encoderDrive(0.7,-2,-2,-2,-2,4);
-            encoderDrive(0.3,5,5,5,5,4);
+            // encoderDrive(0.5,-1.5,-1.5,-1.5,-1.5,4);
+            encoderDrive(0.3,0.5,0.5,0.5,0.5,4);
+
+            imu.rotate(85,0.4);
+            encoderDrive(0.5,-3,-3,-3,-3,4);
+            encoderDrive(0.3,6,6,6,6,4);
             robot.skystoneRight.setPosition(1);
             sleep(1000);
+            // encoderDrive(0.5,-0.5,-0.5,-0.5,-0.5,4);
+            imu.rotate(-85,0.4);
+            encoderDrive(0.5,10,10,10,10,2);
+            robot.skystoneRight.setPosition(0);
+            sleep(1000);
+
+            encoderDrive(0.5,-3,-3,-3,-3,2);
+
+
+
 
 
 

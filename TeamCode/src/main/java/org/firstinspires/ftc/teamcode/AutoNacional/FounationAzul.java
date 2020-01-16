@@ -109,12 +109,23 @@ public class FounationAzul extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+        encoderDrive(1,-1,-1,-1,-1,4.0);
         encoderDrive(1,2,-2,-2,2,4.0);
+        //encoderDrive(.7,2,2,2,2,2);
+        encoderDrive(.3,-6,-6,-6,-6,4.0);
 
-        //encoderDrive(.3,-6,-6,-6,-6,4.0);
-        //robot.foundation.setPosition(0.5);
-        //sleep(250);
-        imu.rotate(-180,0.8);
+        robot.foundation.setPosition(0.5);
+        sleep(500);
+        encoderDrive(.7,4,4,4,4,4.0);
+
+        imu.rotate(-190,0.8);
+        encoderDrive(.5,-8,-8,-8,-8,4.0);
+        robot.foundation.setPosition(0);
+        sleep(500);
+        imu.rotate(-90,0.8);
+        encoderDrive(1,7,7,7,7,3.0);
+        encoderDrive(1,4,-4,-4,4,2.0);
+        encoderDrive(1,3.5,3.5,3.5,3.5,4.0);
 
 
 

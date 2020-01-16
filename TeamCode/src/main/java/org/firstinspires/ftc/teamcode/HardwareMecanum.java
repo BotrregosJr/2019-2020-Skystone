@@ -146,7 +146,7 @@ public class HardwareMecanum
         outtake.setPower(0);
         foundation.setPosition(0);
 
-        skystoneRight.setPosition(0.5);
+        skystoneRight.setPosition(0.2);
         skystoneleft.setPosition(1);
     }
 }
