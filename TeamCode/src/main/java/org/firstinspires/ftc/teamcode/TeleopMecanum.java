@@ -213,6 +213,15 @@ public class TeleopMecanum extends OpMode{
         } else if (gamepad1.left_bumper){
             hws.intakeLeft.setPower(-1);
             hws.intakeRight.setPower(-1);
+        }else if (gamepad1.a){                  //set power elevador
+            hws.intakeLeft.setPower(0.75);
+            hws.intakeRight.setPower(0.75);
+        } else if (gamepad1.b) {
+            hws.intakeLeft.setPower(0.5);
+            hws.intakeRight.setPower(0.5);
+        }else if(gamepad1.x){
+            hws.intakeLeft.setPower(-0.25);
+            hws.intakeRight.setPower(-0.25);
         } else {
             hws.intakeLeft.setPower(0);
             hws.intakeRight.setPower(0);
