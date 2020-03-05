@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.AutoNacional;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -15,6 +16,8 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="Autonomo Skystone Azul imu", group="Final")
+//@Disabled
+
 public class autonomoSkystoneAzulIMUEncoder extends LinearOpMode {
 
     private OpenCvCamera phoneCam;

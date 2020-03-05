@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.AutoNacional;
+package org.firstinspires.ftc.teamcode.Albuquerque;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.HardwareMecanum;
 import org.firstinspires.ftc.teamcode.ImuTurn;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 
 /**
  * This file illustrates the concept of driving a path based on time.
@@ -58,9 +59,9 @@ import org.firstinspires.ftc.teamcode.ImuTurn;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="FoundationRojo    ", group="Pushbot")
+@Autonomous(name="FoundationAzul    ", group="Pushbot")
 
-public class FounationRojo extends LinearOpMode {
+public class FounationAzul extends LinearOpMode {
 
     /* Declare OpMode members. */
     ImuTurn imu;
@@ -109,22 +110,26 @@ public class FounationRojo extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         encoderDrive(1,-1,-1,-1,-1,4.0);
-        encoderDrive(1,-2,2,2,-2,4.0);
-        encoderDrive(.7,2,2,2,2,2);
-        encoderDrive(.3,-7,-7,-7,-7,4.0);
+        encoderDrive(1,2,-2,-2,2,4.0);
+        //encoderDrive(.7,2,2,2,2,2);
+        encoderDrive(.3,-6,-6,-6,-6,4.0);
 
         robot.foundation.setPosition(0.5);
         sleep(500);
-        encoderDrive(.7,3,3,3,3,4.0);
+        encoderDrive(.7,4,4,4,4,4.0);
 
-        imu.rotate(190,0.8);
+        imu.rotate(-190,0.8);
         encoderDrive(.5,-8,-8,-8,-8,4.0);
         robot.foundation.setPosition(0);
         sleep(500);
-        imu.rotate(90,0.8);
-        encoderDrive(1,8,8,8,8,3.0);
-        encoderDrive(1,-4,4,4,-4,2.0);
-        encoderDrive(1,3,3,3,3,4.0);
+        imu.rotate(-90,0.8);
+        encoderDrive(1,7,7,7,7,3.0);
+        encoderDrive(1,4,-4,-4,4,2.0);
+        encoderDrive(1,3.5,3.5,3.5,3.5,4.0);
+
+
+
+
 
     }
 
